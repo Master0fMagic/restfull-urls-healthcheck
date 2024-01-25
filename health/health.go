@@ -21,23 +21,23 @@ var (
 	ErrNonOkResponse = errors.New("error response code not OK")
 )
 
-type UrlHealthCheck interface {
+type URLHealthCheck interface {
 	PingUrls(ctx context.Context, urls []string) (map[string]Status, error)
 }
 
-type HttpUrlHealthCheck struct {
+type HTTPHealthCheck struct {
 	cfg  config.HealthCheckConfig
 	http *http.Client
 }
 
-func New(cfg config.HealthCheckConfig) *HttpUrlHealthCheck {
-	return &HttpUrlHealthCheck{
+func New(cfg config.HealthCheckConfig) *HTTPHealthCheck {
+	return &HTTPHealthCheck{
 		cfg:  cfg,
 		http: &http.Client{Timeout: cfg.Timeout},
 	}
 }
 
-func (h *HttpUrlHealthCheck) PingUrl(ctx context.Context, url string) error {
+func (h *HTTPHealthCheck) PingURL(ctx context.Context, url string) error {
 	logger := log.WithField("url", url)
 
 	logger.Debug("trying to health check...")
@@ -62,7 +62,7 @@ func (h *HttpUrlHealthCheck) PingUrl(ctx context.Context, url string) error {
 	return ErrNonOkResponse
 }
 
-func (h *HttpUrlHealthCheck) PingUrls(ctx context.Context, urls []string) (map[string]Status, error) {
+func (h *HTTPHealthCheck) PingUrls(ctx context.Context, urls []string) (map[string]Status, error) {
 	mtx := sync.Mutex{}
 	healthMap := make(map[string]Status)
 	errGroup, ctx := errgroup.WithContext(ctx)
@@ -74,7 +74,7 @@ func (h *HttpUrlHealthCheck) PingUrls(ctx context.Context, urls []string) (map[s
 	for _, url := range urls {
 		url := url
 		errGroup.Go(func() error {
-			err := h.PingUrl(ctx, url)
+			err := h.PingURL(ctx, url)
 
 			mtx.Lock()
 			defer mtx.Unlock()

@@ -11,10 +11,10 @@ import (
 
 type Server struct {
 	srv *gin.Engine
-	cfg config.HttpConfig
+	cfg config.HTTPConfig
 }
 
-func New(cfg config.HttpConfig, h health.UrlHealthCheck, logger log.FieldLogger) *Server {
+func New(cfg config.HTTPConfig, h health.URLHealthCheck, logger log.FieldLogger) *Server {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 

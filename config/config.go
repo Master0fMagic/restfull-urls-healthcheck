@@ -4,11 +4,11 @@ import "time"
 
 type Config struct {
 	LogLevel          string            `env:"LOG_LEVEL" envDefault:"DEBUG"`
-	HttpConfig        HttpConfig        `envPrefix:"HTTP_"`
+	HTTPConfig        HTTPConfig        `envPrefix:"HTTP_"`
 	HealthCheckConfig HealthCheckConfig `envPrefix:"HEALTHCHECK_"`
 }
 
-type HttpConfig struct {
+type HTTPConfig struct {
 	Port int `env:"PORT" envDefault:"8080"`
 }
 

@@ -16,7 +16,7 @@ func main() {
 
 	initLogger(cfg.LogLevel)
 
-	srv := server.New(cfg.HttpConfig,
+	srv := server.New(cfg.HTTPConfig,
 		health.New(cfg.HealthCheckConfig),
 		log.New(),
 	)
@@ -24,6 +24,7 @@ func main() {
 	if err := srv.Run(); err != nil {
 		log.WithError(err).Fatal("error running server")
 	}
+	log.Warn("application exited")
 }
 
 func initLogger(logLevel string) {

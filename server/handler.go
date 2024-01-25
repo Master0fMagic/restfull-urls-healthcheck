@@ -10,10 +10,10 @@ import (
 )
 
 var (
-	ErrInvalidUrlMethod = errors.New("invalid url method")
+	ErrInvalidURLMethod = errors.New("invalid url method")
 )
 
-func getUrlsHealthRequestHandlerFunc(h health.UrlHealthCheck) gin.HandlerFunc {
+func getUrlsHealthRequestHandlerFunc(h health.URLHealthCheck) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var urls []string
 
@@ -23,8 +23,8 @@ func getUrlsHealthRequestHandlerFunc(h health.UrlHealthCheck) gin.HandlerFunc {
 			return
 		}
 
-		for _, rawUrl := range urls {
-			if err := validateUrl(rawUrl); err != nil {
+		for _, rawURL := range urls {
+			if err := validateURL(rawURL); err != nil {
 				ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid url format"})
 				return
 			}
@@ -40,9 +40,9 @@ func getUrlsHealthRequestHandlerFunc(h health.UrlHealthCheck) gin.HandlerFunc {
 	}
 }
 
-func validateUrl(rawUrl string) error {
-	logger := log.WithField("url", rawUrl)
-	parsedURL, err := url.Parse(rawUrl)
+func validateURL(rawURL string) error {
+	logger := log.WithField("url", rawURL)
+	parsedURL, err := url.Parse(rawURL)
 	if err != nil {
 		logger.WithError(err).Error("error parsing url")
 		return err
@@ -50,7 +50,7 @@ func validateUrl(rawUrl string) error {
 
 	if parsedURL.Scheme != "http" && parsedURL.Scheme != "https" {
 		logger.WithError(err).Error("invalid url method")
-		return ErrInvalidUrlMethod
+		return ErrInvalidURLMethod
 	}
 	return nil
 }
