@@ -2,6 +2,20 @@
 
 ### This service prove a http api to ping specified URLs and return their statuses
 
+### API:
+ 
+- **POST** `/urls-health` 
+- Request Body: JSON `["url1", "url2"]`
+- Response: JSON `{"url1":"active", "url2":"inactive"}`
+- Possible errors:
+  - Code: `400 Bad Request`, Response Body: JSON `{"error": "error message"}`. For cases:
+    - invalid URL format
+    - empty URLs list
+    - request body is not a list
+  - Code: `500 Internal Server Error`, Response Body: JSON `{"error": "error message"}`
+- If response from API takes more than `$HEALTHCHECK_TIMEOUT` - API marked as inactive
+- If `$HEALTHCHECK_STOP_ON_FAILURE` is true, then the first inactive API stops health check process for all APIs left
+
 ### Config params (via ENVs):
 ```
 LOG_LEVEL=INFO
