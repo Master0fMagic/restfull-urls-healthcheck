@@ -23,6 +23,12 @@ func getUrlsHealthRequestHandlerFunc(h health.URLHealthCheck) gin.HandlerFunc {
 			return
 		}
 
+		if len(urls) == 0 {
+			log.Error("empty urls list given")
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "empty urls list given"})
+			return
+		}
+
 		for _, rawURL := range urls {
 			if err := validateURL(rawURL); err != nil {
 				ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid url format"})
@@ -42,7 +48,7 @@ func getUrlsHealthRequestHandlerFunc(h health.URLHealthCheck) gin.HandlerFunc {
 
 func validateURL(rawURL string) error {
 	logger := log.WithField("url", rawURL)
-	parsedURL, err := url.Parse(rawURL)
+	parsedURL, err := url.ParseRequestURI(rawURL)
 	if err != nil {
 		logger.WithError(err).Error("error parsing url")
 		return err

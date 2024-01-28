@@ -21,7 +21,6 @@ func New(cfg config.HTTPConfig, h health.URLHealthCheck, logger log.FieldLogger)
 	r.Use(ginlogrus.Logger(logger))
 
 	r.POST("/urls-health", getUrlsHealthRequestHandlerFunc(h))
-
 	return &Server{
 		srv: r,
 		cfg: cfg,

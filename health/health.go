@@ -25,9 +25,13 @@ type URLHealthCheck interface {
 	PingUrls(ctx context.Context, urls []string) (map[string]Status, error)
 }
 
+type HTTPCaller interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
 type HTTPHealthCheck struct {
 	cfg  config.HealthCheckConfig
-	http *http.Client
+	http HTTPCaller
 }
 
 func New(cfg config.HealthCheckConfig) *HTTPHealthCheck {
