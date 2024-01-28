@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/sync/errgroup"
 	"net/http"
+	"os"
 	"sync"
 )
 
@@ -84,7 +85,7 @@ func (h *HTTPHealthCheck) PingUrls(ctx context.Context, urls []string) (map[stri
 			defer mtx.Unlock()
 
 			switch {
-			case errors.Is(err, ErrNonOkResponse):
+			case errors.Is(err, ErrNonOkResponse), os.IsTimeout(err):
 				healthMap[url] = InactiveStatus
 				if !h.cfg.StopOnFailure {
 					err = nil
